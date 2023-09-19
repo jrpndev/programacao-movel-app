@@ -76,7 +76,7 @@ function App() {
     </View>
   );
 }
-
+//stilização do app, precisa mudar algumas coisas
 const styles = StyleSheet.create({
   container: {
     flex: 1,
