@@ -55,12 +55,12 @@ const styles = StyleSheet.create({
   },
   addButton: {
     position: "absolute",
-    bottom: 20, // Distância da parte inferior
-    right: 20, // Distância da parte direita
+    bottom: 20, 
+    right: 20, 
   },
   iconContainer: {
     backgroundColor: "white",
-    borderRadius: 50, // Para criar um ícone circular
+    borderRadius: 50, 
     padding: 12,
   },
 });
