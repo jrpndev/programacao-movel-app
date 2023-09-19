@@ -6,13 +6,7 @@ import FontAwesomeIcon from "react-native-vector-icons/FontAwesome";
 
 function HomeScreen() {
   const navigation = useNavigation();
-
-  const [tasks, setTasks] = useState([
-    { id: "1", title: "Salvar Tarefas" },
-    { id: "2", title: "Listar Tarefas" },
-    { id: "3", title: "Editar Tarefas" },
-    { id: "4", title: "Remover tarefas" },
-  ]);
+  const tasks = [];
 
   return (
     <View style={styles.container}>
@@ -26,7 +20,7 @@ function HomeScreen() {
           </View>
         )}
       />
-      <TouchableOpacity onPress={() => {}} style={styles.addButton}>
+      <TouchableOpacity onPress={() => { navigation.navigate("nova tarefa")}} style={styles.addButton}>
         <View style={styles.iconContainer}>
           <FontAwesomeIcon name="plus" size={30} color="#03b6fc" />
         </View>
