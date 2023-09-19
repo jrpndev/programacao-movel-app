@@ -18,8 +18,7 @@ function App() {
                 <Text style={styles.texts}>Email:</Text>
                 <TextInput
                     placeholder="email@email.com"
-                    style={styles.inputs}
-
+                    style={styles.inputs} 
                 />
 
                 <TouchableOpacity
