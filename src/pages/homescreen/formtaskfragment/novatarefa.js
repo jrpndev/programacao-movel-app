@@ -10,11 +10,7 @@ import { auth } from "../../../bd/firebase";
 
 function FormTaskFragment() {
 
-
-    
-
     componentDidMount =() => {
-
         let dbRef = database().ref(`usuario_id/${this.state.userid}`)
         this.listenerFirebase(dbRef)
     }
