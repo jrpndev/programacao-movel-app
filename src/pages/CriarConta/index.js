@@ -4,7 +4,7 @@ import { useNavigation } from "@react-navigation/native";
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth"; // Importar getAuth e createUserWithEmailAndPassword
 
 function App() {
-  const navigation = useNavigation();
+  const navigation = useNavigation(); 
 
   const [textInputEmail, setInputEmail] = useState('');
   const [textInputSenha, setInputSenha] = useState('');
