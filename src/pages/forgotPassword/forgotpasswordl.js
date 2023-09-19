@@ -10,7 +10,7 @@ function ForgotPasswordScreen() {
   const handleForgotPassword = async () => {
     try {
       const auth = getAuth(); // Inicializar o módulo de autenticação
-      await sendPasswordResetEmail(auth, textInputEmail); // Enviar email de recuperação de senha
+      await sendPasswordResetEmail(auth, textInputEmail); 
       console.log("Email de recuperação de senha enviado com sucesso!");
     } catch (error) {
       console.error("Erro ao enviar email de recuperação de senha:", error);
