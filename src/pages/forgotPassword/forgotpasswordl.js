@@ -1,21 +1,19 @@
 import React, { useState } from "react";
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth"; // Importar getAuth e createUserWithEmailAndPassword
+import { getAuth, sendPasswordResetEmail } from "firebase/auth"; // Importar getAuth e sendPasswordResetEmail
 
-function App() {
+function ForgotPasswordScreen() {
   const navigation = useNavigation();
-
   const [textInputEmail, setInputEmail] = useState('');
-  const [textInputSenha, setInputSenha] = useState('');
 
-  const handleCreateAccount = async () => {
+  const handleForgotPassword = async () => {
     try {
       const auth = getAuth(); // Inicializar o módulo de autenticação
-      await createUserWithEmailAndPassword(auth, textInputEmail, textInputSenha); // Criar conta usando o auth
-      console.log("Conta criada com sucesso!");
+      await sendPasswordResetEmail(auth, textInputEmail); // Enviar email de recuperação de senha
+      console.log("Email de recuperação de senha enviado com sucesso!");
     } catch (error) {
-      console.error("Erro ao criar conta:", error);
+      console.error("Erro ao enviar email de recuperação de senha:", error);
     }
   };
 
@@ -24,22 +22,14 @@ function App() {
       <View style={styles.forms}>
         <Text style={styles.texts}>Email:</Text>
         <TextInput
-          placeholder="email@email.com"
+          placeholder="Digite seu email"
           style={styles.inputs}
           onChangeText={(text) => setInputEmail(text)}
         />
 
-        <Text style={styles.texts}>Senha:</Text>
-        <TextInput
-          placeholder="****"
-          style={styles.inputs}
-          onChangeText={(text) => setInputSenha(text)}
-        />
-
-        <TouchableOpacity onPress={handleCreateAccount} style={styles.button}>
-          <Text style={styles.buttonText}>Criar Conta</Text>
+        <TouchableOpacity onPress={handleForgotPassword} style={styles.button}>
+          <Text style={styles.buttonText}>Enviar Email de Recuperação</Text>
         </TouchableOpacity>
-
       </View>
     </View>
   );
@@ -83,4 +73,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default App;
+export default ForgotPasswordScreen;

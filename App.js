@@ -1,33 +1,23 @@
-import React from 'react';
+import React from "react";
 
-import { View,StatusBar } from 'react-native'
-import { NavigationContainer } from '@react-navigation/native'
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { View, StatusBar } from "react-native";
+import { NavigationContainer } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
-
-import Logo from './src/pages/Logo'
-import CriarConta from './src/pages/CriarConta'
-import TelaPassWord from './src/pages/TelaPassWord'
-import Login from './src/pages/Login'
+import Logo from "./src/pages/Logo";
+import CriarConta from "./src/pages/CriarConta";
+import TelaPassWord from "./src/pages/TelaPassWord";
+import Login from "./src/pages/Login";
+import HomeScreen from "./src/pages/homescreen/home";
 
 const Stack = createNativeStackNavigator();
 
 export default function App() {
-  
- 
-  
   return (
-
-
-    
-
-
-    <NavigationContainer >
-      <StatusBar backgroundColor='#A98CF3' barStyle='light-content'  />
-
+    <NavigationContainer>
+      <StatusBar backgroundColor="#A98CF3" barStyle="light-content" />
 
       <Stack.Navigator>
-
         <Stack.Screen
           name="Logo"
           component={Logo}
@@ -39,9 +29,8 @@ export default function App() {
           component={Login}
           options={{
             headerLeft: () => <View />,
-            headerTitleAlign: 'center',
-            headerBack:'none'
-            
+            headerTitleAlign: "center",
+            headerBack: "none",
           }}
         />
 
@@ -49,22 +38,26 @@ export default function App() {
           name="Criar Conta"
           component={CriarConta}
           options={{
-            headerTitleAlign: 'center', // Centraliza o título na barra de navegação
+            headerTitleAlign: "center", // Centraliza o título na barra de navegação
           }}
-          
         />
 
         <Stack.Screen
           name="Esqueceu a Senha"
           component={TelaPassWord}
           options={{
-            headerTitleAlign: 'center', // Centraliza o título na barra de navegação
+            headerTitleAlign: "center", // Centraliza o título na barra de navegação
           }}
         />
 
+        <Stack.Screen
+          name="homescreen"
+          component={HomeScreen}
+          options={{
+            headerTitleAlign: "center", // Centraliza o título na barra de navegação
+          }}
+        />
       </Stack.Navigator>
-
     </NavigationContainer>
-
   );
 }
