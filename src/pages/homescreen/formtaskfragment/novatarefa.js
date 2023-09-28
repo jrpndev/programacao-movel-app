@@ -1,34 +1,34 @@
 import React, { useState } from "react";
-import { CheckBox } from "react-native-web";
-import { View, Text, StyleSheet, TextInput } from "react-native";
+import { StyleSheet, TextInput, Alert } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import { TouchableOpacity } from "react-native-web";
-import database from 'react-native-firebase/database';
-import { Auth } from "firebase/auth";
-import { auth } from "../../../bd/firebase";
-
+import { auth, firebase } from "../../../bd/firebase";
+import { View } from "react-native";
+import { TouchableOpacity } from "react-native";
+import { Text } from "react-native";
+import CheckBox from 'react-native-check-box'; // Importe o CheckBox corretamente
 
 function FormTaskFragment() {
-
-    componentDidMount =() => {
-        let dbRef = database().ref(`usuario_id/${this.state.userid}`)
-        this.listenerFirebase(dbRef)
-    }
-
-
   const navigation = useNavigation();
   const [taskname, setInputName] = useState("");
-  const [selectedStatus, setSelectedStatus] = useState("todo"); // Adicione um estado para controlar o status selecionado
+  const [selectedStatus, setSelectedStatus] = useState("todo");
 
-  const criarTarefa = () => {
-    // Crie um objeto com os dados da tarefa
+  const criarTarefa = async () => {
     const newTask = {
       name: taskname,
       status: selectedStatus,
     };
 
-    // Salve a tarefa no Realtime Database
-    firebase.database().ref("tasks").push(newTask);
+    const userId = auth.currentUser.uid;
+
+    const connection = firebase.firestore().collection('tasks').doc(userId);
+
+    try {
+      await connection.update(newTask);
+      Alert.alert("Sucesso", "A tarefa foi criada com sucesso!");
+    } catch (error) {
+      console.log(error);
+    }
+    consol.log('foi clicado');
   };
 
   return (
@@ -44,27 +44,24 @@ function FormTaskFragment() {
           <Text>Status</Text>
           <View style={styles.checkboxes}>
             <CheckBox
-              value={selectedStatus === "todo"}
-              onValueChange={() => setSelectedStatus("todo")}
-              style={styles.checkbox}
+              isChecked={selectedStatus === "todo"} // Use isChecked em vez de value
+              onClick={() => setSelectedStatus("todo")} // Use onClick em vez de onValueChange
             />
             <Text style={styles.checkboxLabel}>A fazer</Text>
           </View>
 
           <View style={styles.checkboxes}>
             <CheckBox
-              value={selectedStatus === "doing"}
-              onValueChange={() => setSelectedStatus("doing")}
-              style={styles.checkbox}
+              isChecked={selectedStatus === "doing"} // Use isChecked em vez de value
+              onClick={() => setSelectedStatus("doing")} // Use onClick em vez de onValueChange
             />
             <Text style={styles.checkboxLabel}>Em progresso</Text>
           </View>
 
           <View style={styles.checkboxes}>
             <CheckBox
-              value={selectedStatus === "done"}
-              onValueChange={() => setSelectedStatus("done")}
-              style={styles.checkbox}
+              isChecked={selectedStatus === "done"} // Use isChecked em vez de value
+              onClick={() => setSelectedStatus("done")} // Use onClick em vez de onValueChange
             />
             <Text style={styles.checkboxLabel}>Concluído</Text>
           </View>

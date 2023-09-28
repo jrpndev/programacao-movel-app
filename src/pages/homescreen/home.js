@@ -1,12 +1,36 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View, Text, FlatList, StyleSheet } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import { TouchableOpacity } from "react-native-web";
+import { TouchableOpacity } from "react-native";
 import FontAwesomeIcon from "react-native-vector-icons/FontAwesome";
-
+import {firebase, auth} from '../../bd/firebase';
 function HomeScreen() {
   const navigation = useNavigation();
-  const tasks = [];
+  const [tasks, setTasks] = useState([]);
+
+  useEffect(() => {
+    // Verifica se o usuário está autenticado
+    const user = auth.currentUser;
+    if (user) {
+      // ID do usuário logado
+      const userId = user.uid;
+
+      // Consulta as tarefas onde o campo "userId" é igual ao ID do usuário
+      const tasksRef = firebase.firestore().collection("tasks").where("userId", "==", userId);
+
+      // Define um observador para ouvir as atualizações na coleção "tasks"
+      const unsubscribe = tasksRef.onSnapshot((querySnapshot) => {
+        const updatedTasks = [];
+        querySnapshot.forEach((doc) => {
+          updatedTasks.push({ id: doc.id, ...doc.data() });
+        });
+        setTasks(updatedTasks);
+      });
+
+      // Não se esqueça de cancelar a inscrição quando o componente for desmontado
+      return () => unsubscribe();
+    }
+  }, []);
 
   return (
     <View style={styles.container}>
@@ -20,7 +44,7 @@ function HomeScreen() {
           </View>
         )}
       />
-      <TouchableOpacity onPress={() => { navigation.navigate("nova tarefa")}} style={styles.addButton}>
+      <TouchableOpacity onPress={() => { navigation.navigate("nova tarefa") }} style={styles.addButton}>
         <View style={styles.iconContainer}>
           <FontAwesomeIcon name="plus" size={30} color="#03b6fc" />
         </View>
@@ -35,7 +59,7 @@ const styles = StyleSheet.create({
     marginTop: 0,
     backgroundColor: "#03b6fc",
     paddingHorizontal: 20,
-    position: "relative", // Permite que os elementos dentro dele sejam posicionados de forma absoluta
+    position: "relative",
   },
   header: {
     fontSize: 24,
@@ -55,12 +79,12 @@ const styles = StyleSheet.create({
   },
   addButton: {
     position: "absolute",
-    bottom: 20, 
-    right: 20, 
+    bottom: 20,
+    right: 20,
   },
   iconContainer: {
     backgroundColor: "white",
-    borderRadius: 50, 
+    borderRadius: 50,
     padding: 12,
   },
 });

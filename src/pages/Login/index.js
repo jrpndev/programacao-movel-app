@@ -7,19 +7,10 @@ import {
   StyleSheet,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import { initializeApp } from "firebase/app";
-import "firebase/auth";
-import {
-  getAuth,
-  signInWithEmailAndPassword,
-  createUserWithEmailAndPassword,
-} from "firebase/auth";
+import { signInWithEmailAndPassword, createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../../bd/firebase";
-// Importe o objeto "auth" do seu arquivo de configuração
 
 function App() {
-  const app = auth;
-
   const navigation = useNavigation();
 
   const [textInputEmail, setInputEmail] = useState("");
@@ -27,8 +18,8 @@ function App() {
 
   const handleLogin = async () => {
     try {
-      await signInWithEmailAndPassword(auth,"liliene@gmail.com", "123456");
-      navigation.navigate("homescreen")
+      await signInWithEmailAndPassword(auth, "liliene@gmail.com", "123456");
+      navigation.navigate("homescreen");
     } catch (error) {
       console.error("Erro ao fazer login:", error);
     }
@@ -36,7 +27,7 @@ function App() {
 
   const handleCreateAccount = async () => {
     try {
-      await createUserWithEmailAndPassword(textInputEmail, textInputSenha);
+      await createUserWithEmailAndPassword(auth, textInputEmail, textInputSenha);
       console.log("Conta criada com sucesso!");
     } catch (error) {
       console.error("Erro ao criar conta:", error);
@@ -68,7 +59,6 @@ function App() {
           <Text style={styles.buttonText}>Criar Conta</Text>
         </TouchableOpacity>
 
-        
         <TouchableOpacity onPress={() => navigation.navigate("Esqueceu a Senha")}>
           <Text style={styles.buttonText}>Esqueci senha</Text>
         </TouchableOpacity>
@@ -76,7 +66,7 @@ function App() {
     </View>
   );
 }
-//stilização do app, precisa mudar algumas coisas
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,

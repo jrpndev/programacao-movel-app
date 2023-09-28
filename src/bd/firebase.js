@@ -1,16 +1,7 @@
-import React, { useState } from "react";
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
-import {
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  StyleSheet,
-} from "react-native";
-import { useNavigation } from "@react-navigation/native";
-import { initializeApp } from "firebase/app";
-import "firebase/auth";
-import "firebase/firestore";
+import { getAuth } from "firebase/auth";
+import firebase from 'firebase/compat/app';
+import 'firebase/compat/auth';
+import 'firebase/compat/firestore';
 
 const firebaseConfig = {
   apiKey: "AIzaSyBQ1Dfo6uqqTI9c4LHzKlid1obPX0gDrfM",
@@ -24,10 +15,10 @@ const firebaseConfig = {
 
 // Initialize Firebase
 
-const app = initializeApp(firebaseConfig);
+if(!firebase.app.length){
+  firebase.initializeApp(firebaseConfig);
+}
 
-const auth = getAuth(app);
+const auth = getAuth(firebase.initializeApp(firebaseConfig));
 
-auth
-
-export { auth };
+export {firebase, auth};
