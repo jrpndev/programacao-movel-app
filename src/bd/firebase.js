@@ -4,13 +4,13 @@ import 'firebase/compat/auth';
 import 'firebase/compat/firestore';
 
 const firebaseConfig = {
-  apiKey: "AIzaSyBQ1Dfo6uqqTI9c4LHzKlid1obPX0gDrfM",
-  authDomain: "crhis-app.firebaseapp.com",
-  projectId: "crhis-app",
-  storageBucket: "crhis-app.appspot.com",
-  messagingSenderId: "306024677799",
-  appId: "1:306024677799:web:504c1970d8ff6dcc057682",
-  measurementId: "G-59MP49YH7Y",
+  apiKey: "AIzaSyDOt_Q9AyE6ai5oxldt1JUwhYXJdhmwS0o",
+  authDomain: "cinema-862fe.firebaseapp.com",
+  projectId: "cinema-862fe",
+  storageBucket: "cinema-862fe.appspot.com",
+  messagingSenderId: "760322814645",
+  appId: "1:760322814645:web:fee8ac3c327057bad684fc",
+  measurementId: "G-EZKBTB0FGC"
 };
 
 // Initialize Firebase

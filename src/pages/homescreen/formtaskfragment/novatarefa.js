@@ -1,76 +1,72 @@
 import React, { useState } from "react";
-import { StyleSheet, TextInput, Alert } from "react-native";
+import { StyleSheet, TextInput, Alert, View, TouchableOpacity, Text } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { auth, firebase } from "../../../bd/firebase";
-import { View } from "react-native";
-import { TouchableOpacity } from "react-native";
-import { Text } from "react-native";
-import CheckBox from 'react-native-check-box'; // Importe o CheckBox corretamente
+import CheckBox from 'react-native-check-box';
 
 function FormTaskFragment() {
   const navigation = useNavigation();
-  const [taskname, setInputName] = useState("");
+  const [taskName, setTaskName] = useState("");
   const [selectedStatus, setSelectedStatus] = useState("todo");
 
   const criarTarefa = async () => {
     const newTask = {
-      name: taskname,
+      name: taskName,
       status: selectedStatus,
     };
 
     const userId = auth.currentUser.uid;
 
-    const connection = firebase.firestore().collection('tasks').doc(userId);
-
     try {
-      await connection.update(newTask);
+      // Primeiro, verifique se a coleção 'tasks' existe no banco de dados
+      const tasksCollectionRef = firebase.firestore().collection('tasks');
+      const docRef = tasksCollectionRef.doc(userId);
+
+      const doc = await docRef.get();
+
+      if (!doc.exists) {
+        // Se a coleção não existe, crie-a
+        await docRef.set({});
+      }
+
+      // Agora, adicione a tarefa ao documento do usuário
+      await docRef.collection('userTasks').add(newTask);
+
       Alert.alert("Sucesso", "A tarefa foi criada com sucesso!");
     } catch (error) {
       console.log(error);
     }
-    consol.log('foi clicado');
   };
 
   return (
     <View style={styles.container}>
-      <View style={styles.forms}>
-        <Text>Nome da tarefa</Text>
-        <TextInput
-          style={styles.inputs}
-          onChangeText={(text) => setInputName(text)}
+      <TextInput
+        style={styles.inputs}
+        placeholder="Nome da tarefa"
+        onChangeText={(text) => setTaskName(text)}
+      />
+      <Text style={styles.texts}>Status</Text>
+
+      <View style={styles.checkboxesRow}>
+
+        <Text style={styles.checkboxLabel}>A fazer</Text>
+
+        <CheckBox
+          isChecked={selectedStatus === "doing"}
+          onClick={() => setSelectedStatus("doing")}
         />
+        <Text style={styles.checkboxLabel}>Em progresso</Text>
 
-        <View style={styles.checkboxContainer}>
-          <Text>Status</Text>
-          <View style={styles.checkboxes}>
-            <CheckBox
-              isChecked={selectedStatus === "todo"} // Use isChecked em vez de value
-              onClick={() => setSelectedStatus("todo")} // Use onClick em vez de onValueChange
-            />
-            <Text style={styles.checkboxLabel}>A fazer</Text>
-          </View>
-
-          <View style={styles.checkboxes}>
-            <CheckBox
-              isChecked={selectedStatus === "doing"} // Use isChecked em vez de value
-              onClick={() => setSelectedStatus("doing")} // Use onClick em vez de onValueChange
-            />
-            <Text style={styles.checkboxLabel}>Em progresso</Text>
-          </View>
-
-          <View style={styles.checkboxes}>
-            <CheckBox
-              isChecked={selectedStatus === "done"} // Use isChecked em vez de value
-              onClick={() => setSelectedStatus("done")} // Use onClick em vez de onValueChange
-            />
-            <Text style={styles.checkboxLabel}>Concluído</Text>
-          </View>
-        </View>
-
-        <TouchableOpacity onPress={criarTarefa} style={styles.button}>
-          <Text style={styles.buttonText}>Salvar</Text>
-        </TouchableOpacity>
+        <CheckBox
+          isChecked={selectedStatus === "done"}
+          onClick={() => setSelectedStatus("done")}
+        />
+        <Text style={styles.checkboxLabel}>Concluído</Text>
       </View>
+
+      <TouchableOpacity onPress={criarTarefa} style={styles.button}>
+        <Text style={styles.buttonText}>Salvar</Text>
+      </TouchableOpacity>
     </View>
   );
 }
@@ -78,37 +74,29 @@ function FormTaskFragment() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginTop: 0,
     backgroundColor: "#03b6fc",
+    alignItems: "center",
+    paddingTop: 20, // Adiciona espaço no topo
+    paddingHorizontal: 20, // Espaço horizontal para os lados
   },
-  checkboxContainer: {
-    flexDirection: "column",
-    marginBottom: 20,
-  },
-  checkboxes: {
+  checkboxesRow: {
     flexDirection: "row",
     alignItems: "center",
+    justifyContent: "space-between",
     marginBottom: 10,
-  },
-  checkbox: {
-    marginRight: 8,
+    marginLeft : 10,
   },
   checkboxLabel: {
+    margin: 10, 
     fontSize: 18,
     color: "white",
   },
   texts: {
     fontSize: 18,
     color: "white",
-    marginTop: 8,
-  },
-  forms: {
-    flexDirection: "column",
-    marginLeft: 10,
-    marginRight: 10,
-    marginTop: 50,
   },
   inputs: {
+    width: "100%", // Ocupa todo o width da tela
     height: 50,
     backgroundColor: "white",
     marginBottom: 10,
@@ -116,18 +104,18 @@ const styles = StyleSheet.create({
     borderRadius: 6,
   },
   button: {
-    backgroundColor: "#03b6fc",
+    backgroundColor: "white", // Fundo branco
     padding: 12,
     borderRadius: 6,
     alignItems: "center",
-    marginTop: 10,
+    width: "100%", // Ocupa todo o width da tela
+    position: "absolute", // Posição absoluta na parte inferior
+    bottom: 0, // Alinha na parte inferior
   },
   buttonText: {
-    backgroundColor: "white",
-    width: 100,
     fontSize: 15,
     textAlign: "center",
-    color: "#03b6fc",
+    color: "black", // Texto preto
   },
 });
 

@@ -3,22 +3,27 @@ import { View, Text, FlatList, StyleSheet } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { TouchableOpacity } from "react-native";
 import FontAwesomeIcon from "react-native-vector-icons/FontAwesome";
-import {firebase, auth} from '../../bd/firebase';
+import { firebase, auth } from "../../bd/firebase";
+
 function HomeScreen() {
   const navigation = useNavigation();
   const [tasks, setTasks] = useState([]);
+  const [uid, setUid] = useState(null); // Estado para armazenar o uid do usuário
 
   useEffect(() => {
     // Verifica se o usuário está autenticado
     const user = auth.currentUser;
     if (user) {
-      // ID do usuário logado
+
       const userId = user.uid;
 
-      // Consulta as tarefas onde o campo "userId" é igual ao ID do usuário
-      const tasksRef = firebase.firestore().collection("tasks").where("userId", "==", userId);
+      console.log("Id do usuario : " , userId);
 
-      // Define um observador para ouvir as atualizações na coleção "tasks"
+      setUid(userId);
+
+      // Consulta as tarefas do usuário atual
+      const tasksRef = firebase.firestore().collection("tasks").doc(userId).collection('userTasks');
+
       const unsubscribe = tasksRef.onSnapshot((querySnapshot) => {
         const updatedTasks = [];
         querySnapshot.forEach((doc) => {
@@ -35,16 +40,26 @@ function HomeScreen() {
   return (
     <View style={styles.container}>
       <Text style={styles.header}>Lista de Tarefas</Text>
-      <FlatList
-        data={tasks}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item }) => (
-          <View style={styles.taskItem}>
-            <Text style={styles.taskTitle}>{item.title}</Text>
-          </View>
-        )}
-      />
-      <TouchableOpacity onPress={() => { navigation.navigate("nova tarefa") }} style={styles.addButton}>
+      {tasks.length === 0 ? (
+        <Text style={styles.noTasks}>Nenhuma tarefa encontrada</Text>
+      ) : (
+        <FlatList
+          data={tasks}
+          keyExtractor={(item) => item.id}
+          renderItem={({ item }) => (
+            <View style={styles.taskItem}>
+              <Text style={styles.taskTitle}>{item.name}</Text>
+              <Text style={styles.taskStatus}>{item.status}</Text>
+            </View>
+          )}
+        />
+      )}
+      <TouchableOpacity
+        onPress={() => {
+          navigation.navigate("nova tarefa");
+        }}
+        style={styles.addButton}
+      >
         <View style={styles.iconContainer}>
           <FontAwesomeIcon name="plus" size={30} color="#03b6fc" />
         </View>
@@ -77,6 +92,10 @@ const styles = StyleSheet.create({
   taskTitle: {
     fontSize: 18,
   },
+  taskStatus: {
+    fontSize: 16,
+    color: "#03b6fc",
+  },
   addButton: {
     position: "absolute",
     bottom: 20,
@@ -86,6 +105,12 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     borderRadius: 50,
     padding: 12,
+  },
+  noTasks: {
+    fontSize: 18,
+    color: "white",
+    textAlign: "center",
+    marginTop: 50, // Ajuste conforme necessário
   },
 });
 

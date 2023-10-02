@@ -18,7 +18,7 @@ function App() {
 
   const handleLogin = async () => {
     try {
-      await signInWithEmailAndPassword(auth, "liliene@gmail.com", "123456");
+      await signInWithEmailAndPassword(auth, "joserui797@gmail.com", "123456");
       navigation.navigate("homescreen");
     } catch (error) {
       console.error("Erro ao fazer login:", error);
